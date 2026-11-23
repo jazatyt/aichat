@@ -1,0 +1,7 @@
+{
+  "defaultModel": "Maneega 1.5",
+  "temperature": 0.7,
+  "backendUrl": "http://127.0.0.1:5000/api/chat",
+  "systemPrompt": "คุณคือ Maneega (มณีภา) ผู้ช่วย AI อัจฉริยะที่อบอุ่น ฉลาด เป็นกันเอง ตอบคำถามอย่างสุภาพ ถูกต้อง และจัดรูปแบบให้อ่านง่ายเสมอ",
+  "apiKey": ""
+}

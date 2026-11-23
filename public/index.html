@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maneega - ผู้ช่วย AI อัจฉริยะ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-[#FAF9F7] text-[#1E1E1E] antialiased overflow-hidden h-screen flex">
+
+  <!-- Mobile Overlay -->
+  <div id="mobile-overlay" class="fixed inset-0 bg-black/40 z-30 hidden md:hidden transition-opacity"></div>
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside id="sidebar" class="w-[280px] flex-shrink-0 bg-[#FBFBFA] border-r border-[#EEEEEC] flex flex-col justify-between h-full transition-all duration-300 z-40 fixed md:relative -translate-x-full md:translate-x-0">
+    <!-- Top Part -->
+    <div class="p-4 flex flex-col h-[calc(100%-140px)] overflow-hidden">
+      <!-- Logo & Collapse Icon -->
+      <div class="flex items-center justify-between mb-5 px-1">
+        <div class="flex items-center gap-2 cursor-pointer select-none" id="logo-home">
+          <span class="text-2xl font-bold tracking-tight text-gray-900 font-sans">Maneega</span>
+        </div>
+        <button id="collapse-sidebar-btn" title="ย่อแถบข้าง" class="p-1.5 text-gray-500 hover:text-gray-800 hover:bg-gray-200/60 rounded-lg transition-colors">
+          <i data-lucide="panel-left-close" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- + เริ่มแชตใหม่ Button -->
+      <button id="new-chat-btn" class="w-full flex items-center justify-between px-3.5 py-2.5 bg-[#EDE8F8] hover:bg-[#E3DCF7] text-[#5A3EB8] rounded-xl font-medium text-sm transition-colors mb-3 group shadow-sm">
+        <div class="flex items-center gap-2.5">
+          <i data-lucide="plus" class="w-4 h-4 stroke-[2.5]"></i>
+          <span class="font-semibold">เริ่มแชตใหม่</span>
+        </div>
+        <span class="text-[11px] text-[#7E69CA] bg-white/60 px-1.5 py-0.5 rounded font-mono font-medium tracking-tight">⌘ K</span>
+      </button>
+
+      <!-- Nav Items: ค้นหา & คลังของฉัน -->
+      <div class="space-y-1 mb-4">
+        <button id="search-chat-btn" class="w-full flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100/80 rounded-xl text-sm transition-colors">
+          <i data-lucide="search" class="w-4 h-4 text-gray-500"></i>
+          <span>ค้นหาแชต</span>
+        </button>
+        <button id="my-library-btn" class="w-full flex items-center gap-3 px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100/80 rounded-xl text-sm transition-colors">
+          <i data-lucide="layout-grid" class="w-4 h-4 text-gray-500"></i>
+          <span>คลังของฉัน</span>
+        </button>
+      </div>
+
+      <!-- History List (Scrollable) -->
+      <div class="flex-1 overflow-y-auto space-y-4 pr-1 text-sm custom-scrollbar" id="chat-history-container">
+        <!-- Section: วันนี้ -->
+        <div>
+          <div class="text-[12px] font-medium text-gray-400 px-3 mb-1.5">วันนี้</div>
+          <div class="space-y-0.5" id="history-today">
+            <!-- Dynamic chats injected here -->
+          </div>
+        </div>
+
+        <!-- Section: 7 วันที่ผ่านมา -->
+        <div>
+          <div class="text-[12px] font-medium text-gray-400 px-3 mb-1.5">7 วันที่ผ่านมา</div>
+          <div class="space-y-0.5" id="history-week">
+            <!-- Dynamic chats injected here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Part: Pro Banner & User Profile -->
+    <div class="p-3 border-t border-[#EEEEEC] bg-[#FBFBFA] space-y-2.5">
+      <!-- Pro Upgrade Card -->
+      <div id="upgrade-card" class="bg-[#F5EFE6] hover:bg-[#F2EAE0] p-3 rounded-2xl cursor-pointer transition-colors border border-[#ECE2D5]/70 relative overflow-hidden group">
+        <div class="font-semibold text-gray-800 text-xs mb-0.5 flex items-center justify-between">
+          <span>ไอเดียดี ๆ ไม่มีขีดจำกัด</span>
+        </div>
+        <div class="text-[11px] text-gray-500 leading-tight mb-2">ปลดล็อกทุกความเป็นไปได้กับ Pro</div>
+        <div class="flex items-center text-[12px] font-medium text-[#5E41D8] group-hover:text-[#4B32B5] transition-colors">
+          <span>อัปเกรดเป็น Pro</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5 ml-1 transition-transform group-hover:translate-x-0.5"></i>
+        </div>
+      </div>
+
+      <!-- User Account Row -->
+      <div class="flex items-center justify-between px-2 py-1.5 rounded-xl hover:bg-gray-100/80 transition-colors cursor-pointer group" id="user-menu-btn">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div class="w-8 h-8 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-semibold text-xs flex-shrink-0">
+            <i data-lucide="user" class="w-4 h-4 text-gray-500"></i>
+          </div>
+          <div class="min-w-0 text-left">
+            <div class="text-xs font-semibold text-gray-800 truncate">บัญชีของฉัน</div>
+            <div class="text-[11px] text-gray-400 truncate">แพ็กเกจ Free</div>
+          </div>
+        </div>
+        <button class="text-gray-400 hover:text-gray-700 p-1">
+          <i data-lucide="more-horizontal" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN CHAT AREA ================= -->
+  <main class="flex-1 flex flex-col h-full bg-white relative overflow-hidden">
+    
+    <!-- Header -->
+    <header class="h-14 border-b border-[#F0EFEB] px-4 md:px-6 flex items-center justify-between flex-shrink-0 bg-white/90 backdrop-blur z-20">
+      <div class="flex items-center gap-3">
+        <!-- Mobile Sidebar Toggle -->
+        <button id="mobile-sidebar-btn" class="p-1.5 md:hidden text-gray-600 hover:bg-gray-100 rounded-lg">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+        <!-- Collapsed Sidebar Restore Button -->
+        <button id="restore-sidebar-btn" class="p-1.5 hidden md:hidden text-gray-600 hover:bg-gray-100 rounded-lg" title="ขยายแถบข้าง">
+          <i data-lucide="panel-left-open" class="w-5 h-5"></i>
+        </button>
+
+        <!-- Model Selector Dropdown -->
+        <div class="relative inline-block text-left" id="model-dropdown-container">
+          <button id="model-select-btn" class="flex items-center gap-1.5 px-2.5 py-1 text-sm font-semibold text-gray-800 hover:bg-gray-100 rounded-lg transition-colors">
+            <span id="current-model-name">Maneega 1.5</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500"></i>
+          </button>
+          <!-- Dropdown Menu -->
+          <div id="model-dropdown-menu" class="hidden absolute left-0 mt-1 w-64 bg-white border border-gray-200 rounded-xl shadow-lg py-1.5 z-50 text-sm">
+            <div class="px-3 py-1.5 text-[11px] font-medium text-gray-400 uppercase tracking-wider">เลือกรุ่นโมเดล</div>
+            <div id="models-list-container">
+              <!-- Models injected dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Header Actions -->
+      <div class="flex items-center gap-2.5">
+        <!-- Backend Status Badge -->
+        <div id="backend-status-badge" class="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border transition-all select-none bg-gray-50 border-gray-200 text-gray-500 cursor-pointer" title="สถานะเซิร์ฟเวอร์หลังบ้านพอร์ต 5000 (คลิกเพื่อทดสอบใหม่)">
+          <span id="backend-status-dot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+          <span id="backend-status-text" class="hidden sm:inline">หลังบ้าน: กำลังตรวจ...</span>
+        </div>
+
+        <!-- Private Chat Badge -->
+        <div class="flex items-center gap-1.5 text-xs text-gray-500 font-medium px-2.5 py-1 bg-gray-50 border border-gray-200/60 rounded-full select-none">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-gray-500"></i>
+          <span>แชตส่วนตัว</span>
+        </div>
+
+        <!-- Settings Button -->
+        <button id="settings-btn" title="การตั้งค่า" class="p-2 text-gray-500 hover:text-gray-800 hover:bg-gray-100 rounded-full transition-colors">
+          <i data-lucide="settings" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Scrollable Chat Body -->
+    <div id="chat-body" class="flex-1 overflow-y-auto px-4 md:px-6 py-6 custom-scrollbar relative flex flex-col justify-between">
+      
+      <!-- ================= WELCOME SCREEN (Screenshot match) ================= -->
+      <div id="welcome-screen" class="max-w-2xl mx-auto w-full my-auto flex flex-col items-center justify-center text-center transition-all duration-300">
+        <!-- Sparkle Icon in soft purple badge -->
+        <div class="w-12 h-12 rounded-2xl bg-[#F0EDFC] text-[#7C5CE6] flex items-center justify-center mb-3 shadow-sm">
+          <i data-lucide="sparkles" class="w-6 h-6 stroke-[2]"></i>
+        </div>
+
+        <div class="text-xs text-gray-400 font-medium mb-1">ทุกไอเดีย เริ่มต้นได้ที่นี่</div>
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2 tracking-tight">วันนี้ ให้ฉันช่วยอะไรดี?</h1>
+        <p class="text-xs md:text-sm text-gray-500 mb-8 max-w-md">คิด เขียน เรียนรู้ หรือแค่ลองเล่าให้ฟัง — ฉันพร้อมช่วยคุณ</p>
+
+        <!-- Main Welcome Input Box -->
+        <div class="w-full bg-white border border-[#E5E5E3] rounded-2xl p-3 shadow-sm hover:border-purple-300 focus-within:border-[#7C5CE6] focus-within:ring-4 focus-within:ring-purple-100 transition-all text-left mb-8">
+          <textarea id="welcome-input" rows="3" placeholder="ถามอะไรก็ได้ หรือแบ่งปันไอเดียของคุณ..." class="w-full resize-none border-none outline-none text-sm text-gray-800 placeholder-gray-400 bg-transparent px-2 py-1 leading-relaxed"></textarea>
+          
+          <div class="flex items-center justify-between pt-2 border-t border-gray-100 mt-2 px-1">
+            <button id="welcome-attach-btn" class="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-800 px-2 py-1 rounded-lg hover:bg-gray-100 transition-colors">
+              <i data-lucide="plus" class="w-3.5 h-3.5 text-gray-500"></i>
+              <span>แนบไฟล์</span>
+            </button>
+            <div class="flex items-center gap-2">
+              <button id="welcome-mic-btn" title="บันทึกเสียง" class="p-2 text-gray-400 hover:text-purple-600 rounded-full hover:bg-purple-50 transition-colors">
+                <i data-lucide="mic" class="w-4 h-4"></i>
+              </button>
+              <button id="welcome-send-btn" class="w-8 h-8 rounded-full bg-[#6046D5] hover:bg-[#5037C2] text-white flex items-center justify-center transition-colors shadow-sm disabled:opacity-50">
+                <i data-lucide="arrow-up" class="w-4 h-4 stroke-[2.5]"></i>
+              </button>
+            </div>
+          </div>
+          <!-- Uploaded files previews -->
+          <div id="welcome-files-preview" class="flex flex-wrap gap-2 pt-2 px-1 empty:hidden"></div>
+        </div>
+
+        <!-- Suggestion Cards Section -->
+        <div class="w-full text-left">
+          <div class="text-[12px] font-medium text-gray-400 mb-3 px-1">ไม่รู้จะเริ่มตรงไหน? ลองไอเดียเหล่านี้</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+            
+            <!-- Card 1: เขียนให้น่าอ่าน -->
+            <div class="suggestion-card p-3.5 rounded-2xl border border-gray-200/80 hover:border-purple-300 hover:bg-purple-50/20 bg-white cursor-pointer transition-all group flex flex-col justify-between h-28" data-prompt="ช่วยร่างอีเมลติดต่อลูกค้าอย่างเป็นมืออาชีพ ให้กระชับ สุภาพ และมีนัดประชุมชัดเจน">
+              <div class="flex items-center justify-between text-gray-500 group-hover:text-purple-600">
+                <i data-lucide="pen-line" class="w-4 h-4 text-purple-600"></i>
+                <i data-lucide="arrow-up-right" class="w-4 h-4 text-gray-400 group-hover:text-purple-600 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+              </div>
+              <div>
+                <div class="font-semibold text-xs text-gray-800 mb-1 group-hover:text-purple-950">เขียนให้น่าอ่าน</div>
+                <div class="text-[11px] text-gray-500 leading-snug">ช่วยร่างอีเมลให้ดูเป็นมืออาชีพ</div>
+              </div>
+            </div>
+
+            <!-- Card 2: จุดประกายไอเดีย -->
+            <div class="suggestion-card p-3.5 rounded-2xl border border-gray-200/80 hover:border-purple-300 hover:bg-purple-50/20 bg-white cursor-pointer transition-all group flex flex-col justify-between h-28" data-prompt="ขอ 5 ไอเดียทำคอนเทนต์สดใหม่สำหรับโซเชียลมีเดียในเดือนนี้ พร้อมมุมมองที่น่าสนใจ">
+              <div class="flex items-center justify-between text-gray-500 group-hover:text-purple-600">
+                <i data-lucide="lightbulb" class="w-4 h-4 text-amber-500"></i>
+                <i data-lucide="arrow-up-right" class="w-4 h-4 text-gray-400 group-hover:text-purple-600 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+              </div>
+              <div>
+                <div class="font-semibold text-xs text-gray-800 mb-1 group-hover:text-purple-950">จุดประกายไอเดีย</div>
+                <div class="text-[11px] text-gray-500 leading-snug">คิดคอนเทนต์ใหม่ ๆ สำหรับโซเชียลมีเดีย</div>
+              </div>
+            </div>
+
+            <!-- Card 3: สรุปให้เข้าใจง่าย -->
+            <div class="suggestion-card p-3.5 rounded-2xl border border-gray-200/80 hover:border-purple-300 hover:bg-purple-50/20 bg-white cursor-pointer transition-all group flex flex-col justify-between h-28" data-prompt="ช่วยสรุปเนื้อหาบทความยาวนี้ให้เหลือประเด็นสำคัญเป็นข้อๆ ใน 3-5 บรรทัด">
+              <div class="flex items-center justify-between text-gray-500 group-hover:text-purple-600">
+                <i data-lucide="file-text" class="w-4 h-4 text-emerald-600"></i>
+                <i data-lucide="arrow-up-right" class="w-4 h-4 text-gray-400 group-hover:text-purple-600 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+              </div>
+              <div>
+                <div class="font-semibold text-xs text-gray-800 mb-1 group-hover:text-purple-950">สรุปให้เข้าใจง่าย</div>
+                <div class="text-[11px] text-gray-500 leading-snug">เปลี่ยนเรื่องยาว ให้เหลือใจความสำคัญ</div>
+              </div>
+            </div>
+
+            <!-- Card 4: ช่วยเขียนโค้ด -->
+            <div class="suggestion-card p-3.5 rounded-2xl border border-gray-200/80 hover:border-purple-300 hover:bg-purple-50/20 bg-white cursor-pointer transition-all group flex flex-col justify-between h-28" data-prompt="ช่วยเขียนโค้ดฟังก์ชันภาษา JavaScript/Node.js ในการประมวลผลข้อมูล พร้อมอธิบายการทำงานทีละขั้นตอน">
+              <div class="flex items-center justify-between text-gray-500 group-hover:text-purple-600">
+                <i data-lucide="code" class="w-4 h-4 text-indigo-600"></i>
+                <i data-lucide="arrow-up-right" class="w-4 h-4 text-gray-400 group-hover:text-purple-600 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+              </div>
+              <div>
+                <div class="font-semibold text-xs text-gray-800 mb-1 group-hover:text-purple-950">ช่วยเขียนโค้ด</div>
+                <div class="text-[11px] text-gray-500 leading-snug">อธิบายโค้ดที่ซับซ้อนให้เข้าใจทีละขั้นตอน</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= CONVERSATION MESSAGES LIST ================= -->
+      <div id="messages-container" class="max-w-3xl mx-auto w-full space-y-6 hidden pb-28 pt-2">
+        <!-- Messages rendered dynamically -->
+      </div>
+
+      <!-- Footer Disclaimer (Always at bottom) -->
+      <div class="w-full text-center py-3 text-[11px] text-gray-400 select-none">
+        Lamoon อาจให้ข้อมูลคลาดเคลื่อนได้ โปรดตรวจสอบข้อมูลสำคัญอีกครั้ง
+      </div>
+    </div>
+
+    <!-- Sticky Bottom Input for Active Chat -->
+    <div id="bottom-input-container" class="hidden absolute bottom-6 inset-x-0 max-w-3xl mx-auto px-4 w-full z-20">
+      <div class="bg-white border border-[#E5E5E3] rounded-2xl p-2.5 shadow-lg focus-within:border-[#7C5CE6] focus-within:ring-4 focus-within:ring-purple-100 transition-all">
+        <!-- Textarea -->
+        <textarea id="chat-input" rows="1" placeholder="ถามอะไรก็ได้ หรือแบ่งปันไอเดียของคุณ..." class="w-full resize-none border-none outline-none text-sm text-gray-800 placeholder-gray-400 bg-transparent px-3 py-1.5 leading-relaxed max-h-36 overflow-y-auto"></textarea>
+        
+        <!-- Action Row -->
+        <div class="flex items-center justify-between pt-1 px-1">
+          <button id="chat-attach-btn" class="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-800 px-2 py-1 rounded-lg hover:bg-gray-100 transition-colors">
+            <i data-lucide="plus" class="w-3.5 h-3.5 text-gray-500"></i>
+            <span>แนบไฟล์</span>
+          </button>
+          
+          <div class="flex items-center gap-2">
+            <button id="chat-mic-btn" title="บันทึกเสียง" class="p-2 text-gray-400 hover:text-purple-600 rounded-full hover:bg-purple-50 transition-colors">
+              <i data-lucide="mic" class="w-4 h-4"></i>
+            </button>
+            <button id="chat-send-btn" class="w-8 h-8 rounded-full bg-[#6046D5] hover:bg-[#5037C2] text-white flex items-center justify-center transition-colors shadow-sm disabled:opacity-50">
+              <i data-lucide="arrow-up" class="w-4 h-4 stroke-[2.5]"></i>
+            </button>
+          </div>
+        </div>
+        <!-- Uploaded files previews -->
+        <div id="chat-files-preview" class="flex flex-wrap gap-2 pt-2 px-1 empty:hidden"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= HIDDEN FILE INPUT ================= -->
+  <input type="file" id="global-file-input" multiple class="hidden" accept="image/*,.pdf,.doc,.docx,.txt,.csv,.json,.js,.py,.html,.css">
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- 1. Search Modal -->
+  <div id="search-modal" class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden border border-gray-200">
+      <div class="p-3.5 border-b border-gray-100 flex items-center gap-2.5">
+        <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
+        <input type="text" id="search-input" placeholder="ค้นหาข้อความหรือบทสนทนา..." class="w-full outline-none text-sm text-gray-800 placeholder-gray-400">
+        <button id="close-search-btn" class="text-xs text-gray-400 hover:text-gray-600 px-1.5 py-0.5 rounded bg-gray-100">ESC</button>
+      </div>
+      <div id="search-results" class="max-h-80 overflow-y-auto p-2 space-y-1 text-sm custom-scrollbar">
+        <!-- Results injected here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Library (คลังของฉัน) Modal -->
+  <div id="library-modal" class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden border border-gray-200 flex flex-col max-h-[85vh]">
+      <div class="p-4 border-b border-gray-100 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="layout-grid" class="w-5 h-5 text-purple-600"></i>
+          <h2 class="font-bold text-gray-800 text-base">คลังคำสั่งลัดของฉัน</h2>
+        </div>
+        <button id="close-library-btn" class="p-1 text-gray-400 hover:text-gray-600 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="p-4 flex-1 overflow-y-auto space-y-3 custom-scrollbar" id="library-items-list">
+        <!-- Library cards injected here -->
+      </div>
+      <div class="p-3.5 border-t border-gray-100 bg-gray-50 flex justify-end">
+        <button id="add-library-item-btn" class="px-3.5 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-sm">
+          <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+          <span>เพิ่มคำสั่งลัดใหม่</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Pro Upgrade Modal -->
+  <div id="upgrade-modal" class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl w-full max-w-md shadow-2xl p-6 text-center border border-purple-100 relative">
+      <button id="close-upgrade-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <i data-lucide="sparkles" class="w-7 h-7"></i>
+      </div>
+      <h3 class="text-xl font-bold text-gray-900 mb-1">Maneega Pro</h3>
+      <p class="text-xs text-gray-500 mb-6">ปลดล็อกพลังเต็มเปี่ยมของ AI เพื่อผลงานที่ไร้ขีดจำกัด</p>
+      
+      <div class="space-y-3 text-left mb-6 text-xs text-gray-700">
+        <div class="flex items-center gap-2.5">
+          <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500 flex-shrink-0"></i>
+          <span>เข้าถึงโมเดลขั้นสูง Maneega 2.0 Pro วิเคราะห์ลึกซึ้ง</span>
+        </div>
+        <div class="flex items-center gap-2.5">
+          <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500 flex-shrink-0"></i>
+          <span>โควตาสนทนาไม่จำกัด ความเร็วตอบสนองสูงสุด</span>
+        </div>
+        <div class="flex items-center gap-2.5">
+          <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500 flex-shrink-0"></i>
+          <span>อัปโหลดและวิเคราะห์ไฟล์ขนาดใหญ่ เอกสาร & โค้ด</span>
+        </div>
+        <div class="flex items-center gap-2.5">
+          <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500 flex-shrink-0"></i>
+          <span>คลังคำสั่งลัดส่วนตัวไม่จำกัด</span>
+        </div>
+      </div>
+
+      <div class="bg-purple-50 p-3 rounded-2xl mb-5">
+        <div class="text-2xl font-bold text-purple-900">฿390 <span class="text-xs font-normal text-purple-600">/ เดือน</span></div>
+        <div class="text-[11px] text-purple-700">ยกเลิกเมื่อไหร่ก็ได้ ไม่มีข้อผูกมัด</div>
+      </div>
+
+      <button onclick="alert('ขอขอบคุณที่สนใจทดสอบแพ็กเกจ Pro! ระบบการชำระเงินกำลังเปิดให้บริการเร็วๆ นี้');" class="w-full py-3 bg-[#6046D5] hover:bg-[#5037C2] text-white font-semibold rounded-xl text-sm shadow-md transition-colors">
+        เริ่มต้นใช้งาน Pro ตอนนี้
+      </button>
+    </div>
+  </div>
+
+  <!-- 4. Settings Modal -->
+  <div id="settings-modal" class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl p-5 border border-gray-200">
+      <div class="flex items-center justify-between pb-3 border-b border-gray-100 mb-4">
+        <h3 class="font-bold text-gray-800 text-sm flex items-center gap-2">
+          <i data-lucide="settings" class="w-4 h-4 text-purple-600"></i>
+          <span>การตั้งค่าระบบ</span>
+        </h3>
+        <button id="close-settings-btn" class="text-gray-400 hover:text-gray-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="space-y-4 text-xs">
+        <div>
+          <label class="block font-medium text-gray-700 mb-1">URL เซิร์ฟเวอร์หลังบ้าน (Backend API ของเพื่อน)</label>
+          <input type="text" id="settings-backend-url" placeholder="http://127.0.0.1:5000/api/chat" class="w-full px-3 py-2 border border-gray-300 rounded-xl outline-none focus:border-purple-500 font-mono text-[11px]">
+          <p class="text-[10px] text-gray-400 mt-1">ส่งต่อไปยัง API หลังบ้านของคุณ (ค่าเริ่มต้น: http://127.0.0.1:5000/api/chat)</p>
+        </div>
+        <div>
+          <label class="block font-medium text-gray-700 mb-1">Google Gemini หรือ Custom API Key (ตัวเลือกเพิ่มเติม)</label>
+          <input type="password" id="settings-api-key" placeholder="AIzaSy... (ปล่อยว่างเพื่อใช้โหมดออฟไลน์อัตโนมัติ)" class="w-full px-3 py-2 border border-gray-300 rounded-xl outline-none focus:border-purple-500">
+          <p class="text-[10px] text-gray-400 mt-1">ระบบมาพร้อม AI ในตัว สามารถตอบคำถามภาษาไทยและเขียนโค้ดได้ทันทีโดยไม่ต้องใส่คีย์</p>
+        </div>
+        <div>
+          <label class="block font-medium text-gray-700 mb-1">System Prompt / บุคลิกของ AI</label>
+          <textarea id="settings-system-prompt" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-xl outline-none focus:border-purple-500" placeholder="ระบุคำสั่งควบคุมบุคลิก"></textarea>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 mt-5">
+        <button id="cancel-settings-btn" class="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-xl text-xs font-medium">ยกเลิก</button>
+        <button id="save-settings-btn" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-medium">บันทึก</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Scripts -->
+  <script src="/js/markdown.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment variables & secrets
+.env
+*.env
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# Uploads & Temporary files
+uploads/*
+!uploads/.gitkeep
+
+# System files
+.DS_Store
+Thumbs.db

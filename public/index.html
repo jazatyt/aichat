@@ -336,6 +336,27 @@
     </div>
   </div>
 
+  <!-- 4. Confirm Delete Chat Modal -->
+  <div id="confirm-delete-modal" class="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-50 flex items-center justify-center p-4 hidden transition-opacity duration-200">
+    <div id="confirm-delete-card" class="bg-white rounded-2xl w-full max-w-sm shadow-2xl p-6 border border-gray-100 text-center transform transition-all duration-200 scale-95 opacity-0">
+      <div class="w-12 h-12 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-xs">
+        <i data-lucide="trash-2" class="w-6 h-6 stroke-[2]"></i>
+      </div>
+      <h3 class="text-base font-bold text-gray-900 mb-1">ลบการสนทนานี้?</h3>
+      <p class="text-xs text-gray-500 mb-6 leading-relaxed">
+        ข้อความทั้งหมดในแชตนี้จะถูกลบถาวร และไม่สามารถกู้คืนกลับมาได้อีก
+      </p>
+      <div class="flex items-center justify-center gap-2.5">
+        <button id="cancel-delete-btn" class="flex-1 py-2.5 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-xs font-semibold transition-colors">
+          ยกเลิก
+        </button>
+        <button id="confirm-delete-btn" class="flex-1 py-2.5 px-4 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-semibold shadow-sm transition-colors">
+          ลบการสนทนา
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- App Scripts -->
   <script src="/js/markdown.js"></script>
   <script src="/js/app.js"></script>

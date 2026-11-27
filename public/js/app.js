@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
     isGenerating: false,
     uploadedFiles: [],
     speechRecognition: null,
-    isRecording: false
+    isRecording: false,
+    chatToDeleteId: null
   };
 
   // DOM Elements
@@ -82,7 +83,13 @@ document.addEventListener('DOMContentLoaded', () => {
     cancelSettingsBtn: document.getElementById('cancel-settings-btn'),
     saveSettingsBtn: document.getElementById('save-settings-btn'),
     settingsApiKey: document.getElementById('settings-api-key'),
-    settingsSystemPrompt: document.getElementById('settings-system-prompt')
+    settingsSystemPrompt: document.getElementById('settings-system-prompt'),
+
+    // Confirm Delete Modal
+    confirmDeleteModal: document.getElementById('confirm-delete-modal'),
+    confirmDeleteCard: document.getElementById('confirm-delete-card'),
+    cancelDeleteBtn: document.getElementById('cancel-delete-btn'),
+    confirmDeleteBtn: document.getElementById('confirm-delete-btn')
   };
 
   // Initialize Lucide icons
@@ -203,14 +210,12 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // Bind delete & rename events
+    // Bind delete events
     document.querySelectorAll('.delete-chat-btn').forEach(btn => {
-      btn.addEventListener('click', async (e) => {
+      btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const chatId = btn.dataset.chatId;
-        if (confirm('ต้องการลบการสนทนานี้หรือไม่?')) {
-          await deleteChat(chatId);
-        }
+        openDeleteConfirmModal(chatId);
       });
     });
 
@@ -518,7 +523,42 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 7. Delete Chat
+  // 7. Delete Chat & Custom Confirmation Modal
+  function openDeleteConfirmModal(chatId) {
+    state.chatToDeleteId = chatId;
+    elements.confirmDeleteModal.classList.remove('hidden');
+    requestAnimationFrame(() => {
+      elements.confirmDeleteCard.classList.remove('scale-95', 'opacity-0');
+      elements.confirmDeleteCard.classList.add('scale-100', 'opacity-100');
+    });
+    refreshIcons();
+  }
+
+  function closeDeleteConfirmModal() {
+    state.chatToDeleteId = null;
+    elements.confirmDeleteCard.classList.remove('scale-100', 'opacity-100');
+    elements.confirmDeleteCard.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+      elements.confirmDeleteModal.classList.add('hidden');
+    }, 150);
+  }
+
+  elements.confirmDeleteBtn.addEventListener('click', async () => {
+    if (state.chatToDeleteId) {
+      const chatId = state.chatToDeleteId;
+      closeDeleteConfirmModal();
+      await deleteChat(chatId);
+    }
+  });
+
+  elements.cancelDeleteBtn.addEventListener('click', () => closeDeleteConfirmModal());
+
+  elements.confirmDeleteModal.addEventListener('click', (e) => {
+    if (e.target === elements.confirmDeleteModal) {
+      closeDeleteConfirmModal();
+    }
+  });
+
   async function deleteChat(chatId) {
     try {
       await fetch(`/api/chats/${chatId}`, { method: 'DELETE' });
@@ -536,6 +576,9 @@ document.addEventListener('DOMContentLoaded', () => {
   elements.logoHome.addEventListener('click', () => showWelcomeView());
 
   document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !elements.confirmDeleteModal.classList.contains('hidden')) {
+      closeDeleteConfirmModal();
+    }
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
       e.preventDefault();
       showWelcomeView();

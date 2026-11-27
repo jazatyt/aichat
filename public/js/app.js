@@ -29,8 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
     myLibraryBtn: document.getElementById('my-library-btn'),
     historyToday: document.getElementById('history-today'),
     historyWeek: document.getElementById('history-week'),
-    upgradeCard: document.getElementById('upgrade-card'),
-    userMenuBtn: document.getElementById('user-menu-btn'),
 
     // Model Selector
     modelSelectBtn: document.getElementById('model-select-btn'),
@@ -71,9 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
     libraryItemsList: document.getElementById('library-items-list'),
     closeLibraryBtn: document.getElementById('close-library-btn'),
     addLibraryItemBtn: document.getElementById('add-library-item-btn'),
-
-    upgradeModal: document.getElementById('upgrade-modal'),
-    closeUpgradeBtn: document.getElementById('close-upgrade-btn'),
 
     // Status Badge
     backendStatusBadge: document.getElementById('backend-status-badge'),
@@ -785,11 +780,6 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error(err);
     }
   });
-
-  // 14. Pro Modal
-  elements.upgradeCard.addEventListener('click', () => elements.upgradeModal.classList.remove('hidden'));
-  elements.userMenuBtn.addEventListener('click', () => elements.upgradeModal.classList.remove('hidden'));
-  elements.closeUpgradeBtn.addEventListener('click', () => elements.upgradeModal.classList.add('hidden'));
 
   // ฟังก์ชัน askAI ที่เพื่อนส่งมา (พร้อมรองรับการเรียกใช้งานโดยตรง)
   async function askAI(userText) {

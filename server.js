@@ -224,6 +224,22 @@ async function fetchFromBackend(userPrompt) {
       if (data && typeof data.reply !== 'undefined') {
         return { success: true, reply: data.reply, url: backendUrl };
       }
+    } else {
+      try {
+        const errorData = await response.json();
+        const errorMsg = errorData.detail || errorData.error || `HTTP ${response.status}`;
+        let helpfulTip = "";
+        if (errorMsg.includes("PERMISSION_DENIED") || errorMsg.includes("403")) {
+          helpfulTip = "\n\n💡 **วิธีแก้ให้เพื่อนทำ:** API Key ในเครื่องเพื่อนยังไม่ได้เปิดสิทธิ์ Generative Language API ให้เพื่อนเข้าไปที่ [Google AI Studio](https://aistudio.google.com/app/apikey) แล้วกด **Create API key -> Create API key in new project** แล้วนำคีย์ใหม่มาใส่";
+        } else if (errorMsg.includes("model") || errorMsg.includes("404")) {
+          helpfulTip = "\n\n💡 **วิธีแก้ให้เพื่อนทำ:** ชื่อโมเดลในโค้ดเพื่อนไม่ถูกต้อง ให้เพื่อนเปลี่ยนชื่อโมเดลเป็น `gemini-2.5-flash` หรือ `gemini-1.5-flash`";
+        }
+        return {
+          success: true,
+          reply: `⚠️ **หลังบ้านของเพื่อนส่ง Error กลับมา (HTTP ${response.status}):**\n\n\`\`\`text\n${errorMsg.substring(0, 350)}\n\`\`\`${helpfulTip}`,
+          url: backendUrl
+        };
+      } catch (errJson) {}
     }
   } catch (error) {
     // Port 5000 not responding or down

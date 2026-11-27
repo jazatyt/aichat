@@ -20,8 +20,8 @@
 
   <!-- ================= SIDEBAR ================= -->
   <aside id="sidebar" class="w-[280px] flex-shrink-0 bg-[#FBFBFA] border-r border-[#EEEEEC] flex flex-col justify-between h-full transition-all duration-300 z-40 fixed md:relative -translate-x-full md:translate-x-0">
-    <!-- Top Part -->
-    <div class="p-4 flex flex-col h-[calc(100%-140px)] overflow-hidden">
+    <!-- Sidebar Body -->
+    <div class="p-4 flex flex-col h-full overflow-hidden">
       <!-- Logo & Collapse Icon -->
       <div class="flex items-center justify-between mb-5 px-1">
         <div class="flex items-center gap-2 cursor-pointer select-none" id="logo-home">
@@ -70,37 +70,6 @@
             <!-- Dynamic chats injected here -->
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- Bottom Part: Pro Banner & User Profile -->
-    <div class="p-3 border-t border-[#EEEEEC] bg-[#FBFBFA] space-y-2.5">
-      <!-- Pro Upgrade Card -->
-      <div id="upgrade-card" class="bg-[#F5EFE6] hover:bg-[#F2EAE0] p-3 rounded-2xl cursor-pointer transition-colors border border-[#ECE2D5]/70 relative overflow-hidden group">
-        <div class="font-semibold text-gray-800 text-xs mb-0.5 flex items-center justify-between">
-          <span>ไอเดียดี ๆ ไม่มีขีดจำกัด</span>
-        </div>
-        <div class="text-[11px] text-gray-500 leading-tight mb-2">ปลดล็อกทุกความเป็นไปได้กับ Pro</div>
-        <div class="flex items-center text-[12px] font-medium text-[#5E41D8] group-hover:text-[#4B32B5] transition-colors">
-          <span>อัปเกรดเป็น Pro</span>
-          <i data-lucide="arrow-right" class="w-3.5 h-3.5 ml-1 transition-transform group-hover:translate-x-0.5"></i>
-        </div>
-      </div>
-
-      <!-- User Account Row -->
-      <div class="flex items-center justify-between px-2 py-1.5 rounded-xl hover:bg-gray-100/80 transition-colors cursor-pointer group" id="user-menu-btn">
-        <div class="flex items-center gap-2.5 min-w-0">
-          <div class="w-8 h-8 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-semibold text-xs flex-shrink-0">
-            <i data-lucide="user" class="w-4 h-4 text-gray-500"></i>
-          </div>
-          <div class="min-w-0 text-left">
-            <div class="text-xs font-semibold text-gray-800 truncate">บัญชีของฉัน</div>
-            <div class="text-[11px] text-gray-400 truncate">แพ็กเกจ Free</div>
-          </div>
-        </div>
-        <button class="text-gray-400 hover:text-gray-700 p-1">
-          <i data-lucide="more-horizontal" class="w-4 h-4"></i>
-        </button>
       </div>
     </div>
   </aside>
@@ -332,49 +301,7 @@
     </div>
   </div>
 
-  <!-- 3. Pro Upgrade Modal -->
-  <div id="upgrade-modal" class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl w-full max-w-md shadow-2xl p-6 text-center border border-purple-100 relative">
-      <button id="close-upgrade-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-        <i data-lucide="x" class="w-5 h-5"></i>
-      </button>
-      <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-        <i data-lucide="sparkles" class="w-7 h-7"></i>
-      </div>
-      <h3 class="text-xl font-bold text-gray-900 mb-1">Maneega Pro</h3>
-      <p class="text-xs text-gray-500 mb-6">ปลดล็อกพลังเต็มเปี่ยมของ AI เพื่อผลงานที่ไร้ขีดจำกัด</p>
-      
-      <div class="space-y-3 text-left mb-6 text-xs text-gray-700">
-        <div class="flex items-center gap-2.5">
-          <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500 flex-shrink-0"></i>
-          <span>เข้าถึงโมเดลขั้นสูง Maneega 2.0 Pro วิเคราะห์ลึกซึ้ง</span>
-        </div>
-        <div class="flex items-center gap-2.5">
-          <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500 flex-shrink-0"></i>
-          <span>โควตาสนทนาไม่จำกัด ความเร็วตอบสนองสูงสุด</span>
-        </div>
-        <div class="flex items-center gap-2.5">
-          <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500 flex-shrink-0"></i>
-          <span>อัปโหลดและวิเคราะห์ไฟล์ขนาดใหญ่ เอกสาร & โค้ด</span>
-        </div>
-        <div class="flex items-center gap-2.5">
-          <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500 flex-shrink-0"></i>
-          <span>คลังคำสั่งลัดส่วนตัวไม่จำกัด</span>
-        </div>
-      </div>
-
-      <div class="bg-purple-50 p-3 rounded-2xl mb-5">
-        <div class="text-2xl font-bold text-purple-900">฿390 <span class="text-xs font-normal text-purple-600">/ เดือน</span></div>
-        <div class="text-[11px] text-purple-700">ยกเลิกเมื่อไหร่ก็ได้ ไม่มีข้อผูกมัด</div>
-      </div>
-
-      <button onclick="alert('ขอขอบคุณที่สนใจทดสอบแพ็กเกจ Pro! ระบบการชำระเงินกำลังเปิดให้บริการเร็วๆ นี้');" class="w-full py-3 bg-[#6046D5] hover:bg-[#5037C2] text-white font-semibold rounded-xl text-sm shadow-md transition-colors">
-        เริ่มต้นใช้งาน Pro ตอนนี้
-      </button>
-    </div>
-  </div>
-
-  <!-- 4. Settings Modal -->
+  <!-- 3. Settings Modal -->
   <div id="settings-modal" class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl p-5 border border-gray-200">
       <div class="flex items-center justify-between pb-3 border-b border-gray-100 mb-4">

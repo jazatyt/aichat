@@ -917,17 +917,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 16. Sidebar Collapse / Mobile Drawer
+  // 16. Sidebar Collapse / Restore / Mobile Drawer
   elements.collapseSidebarBtn.addEventListener('click', () => {
     elements.sidebar.classList.add('hidden');
     elements.restoreSidebarBtn.classList.remove('hidden');
-    elements.restoreSidebarBtn.classList.add('md:block');
+    refreshIcons();
   });
 
   elements.restoreSidebarBtn.addEventListener('click', () => {
     elements.sidebar.classList.remove('hidden');
     elements.restoreSidebarBtn.classList.add('hidden');
-    elements.restoreSidebarBtn.classList.remove('md:block');
+    refreshIcons();
   });
 
   elements.mobileSidebarBtn.addEventListener('click', () => {
